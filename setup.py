@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+# python setup.py sdist bdist_wheel
+# twine upload dist/*
+
 from setuptools import setup, find_packages
 
 import tlbpy
