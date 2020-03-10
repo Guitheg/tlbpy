@@ -8,3 +8,6 @@
 __version__ = "0.0.5"
 
 from tlbpy.helloworld import helloworld
+from tlbpy.cnf_parser import cnf_parser
+from tlbpy.duration import Duration
+from tlbpy.talk import Talk
