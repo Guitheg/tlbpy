@@ -25,5 +25,3 @@ MANIFEST
 __pycache__/
 
 .vscode/
-
-upload.py
