@@ -18,7 +18,6 @@ def upload():
             for line in f.readlines():
                 if line.startswith('__version__'):
                     V, m, p = line.split("=")[1].strip('"\n').split(".")
-                    print("new version :",V,m,p)
                     t = sys.argv[2]
                     if t == "V":
                         V = int(V) + 1
@@ -33,6 +32,7 @@ def upload():
                         m = int(m)
                         p = int(p) + 1
                     line = '__version__="'+str(V)+"."+str(m)+"."+str(p)+'"\n'
+                    print("new version : ", line)
                 data+=line
         with open(file, 'w') as f:
             f.write(data)
