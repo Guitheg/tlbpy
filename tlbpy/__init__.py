@@ -5,7 +5,7 @@
     My personnal toolbox for Python
 """
 
-__version__ = "0.0.5"
+__version__ = "0.0.6"
 
 from tlbpy.helloworld import helloworld
 from tlbpy.cnf_parser import cnf_parser
