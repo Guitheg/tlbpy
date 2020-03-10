@@ -12,7 +12,7 @@
 __all__ = ['helloworld']
  
 def helloworld():
-    print("Hello world ! Comment ça va ?")
+    print("Bonne journée !")
 
 if __name__ == "__main__":
     helloworld()

@@ -5,6 +5,6 @@
     My personnal toolbox for Python
 """
 
-__version__ = "0.0.2"
+__version__ = "0.0.5"
 
 from tlbpy.helloworld import helloworld
