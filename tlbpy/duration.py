@@ -31,4 +31,10 @@ class Duration:
 
     def get(self):
         return self.duree
+
+    def evaluate(self, func, *args, **kwargs):
+        self.st()
+        r = func(*args, **kwargs)
+        self.sp()
+        return (self.get(), r)
     
