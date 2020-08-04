@@ -4,7 +4,7 @@
 """
     My personnal toolbox for Python
 """
-__version__="0.0.11"
+__version__="0.0.13"
 from tlbpy.helloworld import helloworld
 from tlbpy.cnf_parser import cnf_parser
 from tlbpy.duration import Duration

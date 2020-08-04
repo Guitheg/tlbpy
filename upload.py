@@ -23,11 +23,15 @@ def upload():
                         V = int(V) + 1
                         m = 0
                         p = 0
-                    if t == "m":
+                    elif t == "m":
                         V = int(V)
                         m = int(m) + 1
                         p = 0
-                    if t == "p":
+                    elif t == "p":
+                        V = int(V)
+                        m = int(m)
+                        p = int(p) + 1
+                    else:
                         V = int(V)
                         m = int(m)
                         p = int(p) + 1
