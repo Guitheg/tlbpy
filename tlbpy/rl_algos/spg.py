@@ -16,7 +16,7 @@ class SimplestPolicyGradient(Rl_algo):
                  dis = 0.98,
                  batchsize = 5000):
         
-        super(SimplestPolicyGradient).__init__(env, discret_actions, discret_spaces, dis, lr)
+        super(SimplestPolicyGradient, self).__init__(env, discret_actions, discret_spaces, dis, lr)
         self.hidden_layers = hidden_layers
         self.model = self._mlp(self.obs_dim, self.hidden_layers, self.act_dim, activation, out_activation)
         self.optimizer = Adam(self.model.parameters(), lr=lr)
