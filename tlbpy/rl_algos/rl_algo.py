@@ -9,8 +9,12 @@ class Rl_algo:
                  dis = 0.98,
                  lr = 0.01):
         self.env = env
-        self.act_dim = env.action_space.n if discret_actions else env.action_space.shape[0]
-        self.obs_dim = env.observation_space.n if discret_spaces else env.observation_space.shape[0]
+        self.act_dim = env.action_space.shape[0]
+        self.obs_dim = env.observation_space.shape[0]
+        if discret_actions:
+            self.n_action = env.action_space.n
+        if discret_spaces:
+            self.n_space = env.observation_space.n
         self.lr = lr
         self.dis = dis
         
