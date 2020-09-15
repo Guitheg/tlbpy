@@ -4,7 +4,7 @@
 """
     My personnal toolbox for Python
 """
-__version__="0.0.17"
+__version__="0.0.18"
 from tlbpy.cnf_parser import cnf_parser
 from tlbpy.path import get_file_ext, get_files
 from tlbpy import rl_algos

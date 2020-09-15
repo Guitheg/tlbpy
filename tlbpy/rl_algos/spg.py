@@ -3,7 +3,7 @@ import torch
 from torch.optim.adam import Adam
 from torch.distributions.categorical import Categorical
 import numpy as np
-from tlbpy.rl_algos.rl_algo import Rl_algo
+from .rl_algo import Rl_algo
 
 __all__ = ['SimplestPolicyGradient']
 

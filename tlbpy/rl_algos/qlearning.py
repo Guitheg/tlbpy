@@ -1,18 +1,18 @@
 from random import random
 from .rl_algo import Rl_algo
-from .utils import Discretizer, Interpreter
+from .utils import Discretizer, Interpreter, Epsilon
 import numpy as np
 
 __all__ = ['Q_learning']
 
 class Q_learning(Rl_algo):
     def __init__(self, env, discret_actions, discret_spaces, dis=0.98, lr=0.01, 
-                 n_actions=None, 
-                 n_spaces=None,
+                 n_action=None, 
+                 n_state=None,
                  q_init = "zeros",
                  epsilon = 1,
                  seuil_epsilon = 0.1,
-                 end_epsilon = 0.5):
+                 prct_epsilon = 0.5):
         """Q-learning algorithm
 
         Args:
@@ -21,33 +21,34 @@ class Q_learning(Rl_algo):
             discret_spaces ([type]): [description]
             dis ([type]): [description]
             lr ([type]): [description]
-            n_actions ([type], optional): [description]. Defaults to None.
-            n_spaces ([type], optional): [description]. Defaults to None.
+            n_action ([type], optional): [description]. Defaults to None.
+            n_state ([type], optional): [description]. Defaults to None.
             q_init (str, optional): [description]. Defaults to "zeros".
             epsilon (int, optional): [description]. Defaults to 1.
             seuil_epsilon (float, optional): [description]. Defaults to 0.1.
-            end_epsilon (float, optional): the pourcentage mult by the n_episode to know where epsilon should stop exploring. Defaults to 0.5.
+            prct_epsilon (float, optional): the pourcentage mult by the n_episode to know where epsilon should stop exploring. Defaults to 0.5.
 
         Raises:
             NotImplementedError: [description]
         """
         super(Q_learning, self).__init__(env, discret_actions, discret_spaces, dis, lr)
-        if discret_actions == False:
-            if n_actions == None:
-                raise Exception("We need n_actions discret to interpret the continuous action")
-            self.n_action = n_actions
-            self.interpreter = Interpreter(self.n_action, self.env.action_space.low, self.env.action_space.high)
         
         self.discret_spaces = discret_spaces
         self.discret_actions = discret_actions
         
+        if discret_actions == False:
+            if n_action == None:
+                raise Exception("We need n_action discret to interpret the continuous action")
+            self.n_action = n_action
+            self.interpreter = Interpreter(self.n_action, self.env.action_space.low, self.env.action_space.high)
+        
         if discret_spaces == False:
-            if n_spaces == None:
-                raise Exception("We need n_spaces discret to discretize the continuous space")
-            self.n_space = n_spaces
-            self.discretizer = Discretizer(self.n_space, self.env.observation_space.low, self.env.observation_space.high)
+            if n_state == None:
+                raise Exception("We need n_state discret to discretize the continuous space")
+            self.n_state = n_state
+            self.discretizer = Discretizer(self.n_state, self.env.observation_space.low, self.env.observation_space.high)
             
-        q_fct_shape = ([self.n_space]*self.obs_dim + [self.n_action]*self.act_dim)
+        q_fct_shape = ([self.n_state]*self.obs_dim + [self.n_action]*self.act_dim)
         if q_init == "zeros":
             self.q_fct = np.zeros(q_fct_shape)
         elif q_init == "uniform":
@@ -55,9 +56,9 @@ class Q_learning(Rl_algo):
         else:
             raise NotImplementedError
         
-        self.epsilon = epsilon
-        self.seuil_epsilon = seuil_epsilon
-        self.end_epsilon = end_epsilon
+        self.e = epsilon
+        self.e_seuil = seuil_epsilon
+        self.e_prct = prct_epsilon
         
     def train_one_epoch(self):
         done = False
@@ -69,7 +70,7 @@ class Q_learning(Rl_algo):
             
             policy = np.argmax(self.q_fct, axis=-1)
             
-            if random() <= self.epsilon:
+            if self.epsilon.explore():
                 action = np.random.randint(self.n_action)
             else:
                 action = policy[state]
@@ -87,8 +88,7 @@ class Q_learning(Rl_algo):
             
     def _train(self, n_epochs):
         
-        end_epsilon = int(n_epochs*self.end_epsilon)
-        pas_epsilon = self.epsilon / (end_epsilon - 1)
+        self.epsilon = Epsilon(self.e, self.e_seuil, self.e_prct, n_epochs)
         
         all_rewards = []
         reward_n_ep = []
@@ -99,8 +99,8 @@ class Q_learning(Rl_algo):
             if epoch % (n_epochs // 100) == 0:
                 print(f"{epoch}/{n_epochs} | (Max : {np.max(reward_n_ep)} | Moyenne  : {np.mean(reward_n_ep)} ) | Moyenne totale: {np.mean(all_rewards)}")
                 reward_n_ep = []
-            self.epsilon -= pas_epsilon if self.epsilon - pas_epsilon >= self.seuil_epsilon else 0
-    
+            self.epsilon.update()
+            
     def test_one(self):
         done = False
         tot_rewards = 0
@@ -124,3 +124,4 @@ class Q_learning(Rl_algo):
     
     def save_model(self, path):
         np.save(path, self.q_fct)
+        print("Q-table saved !")
